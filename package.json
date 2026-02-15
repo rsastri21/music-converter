@@ -23,10 +23,14 @@
     "lint": "eslint \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
     "lint-fix": "pnpm lint --fix",
     "test": "vitest",
-    "coverage": "vitest --coverage"
+    "coverage": "vitest --coverage",
+    "redis:start": "docker-compose up -d",
+    "redis:stop": "docker-compose down"
   },
   "dependencies": {
-    "effect": "^3.17.7"
+    "@effect/platform": "^0.94.5",
+    "effect": "^3.17.7",
+    "redis": "^5.10.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.8",

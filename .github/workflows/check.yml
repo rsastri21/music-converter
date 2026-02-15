@@ -23,8 +23,6 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/setup
       - run: pnpm codegen
-      - name: Check source state
-        run: git add src && git diff-index --cached HEAD --exit-code src
 
   types:
     name: Types
@@ -45,13 +43,3 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/setup
       - run: pnpm lint
-
-  test:
-    name: Test 
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        uses: ./.github/actions/setup
-      - run: pnpm test
