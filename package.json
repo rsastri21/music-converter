@@ -7,7 +7,7 @@
   "description": "A simple service to convert share URLs between music services.",
   "repository": {
     "type": "git",
-    "url": "<PLACEHOLDER>"
+    "url": "https://github.com/rsastri21/music-converter.git"
   },
   "publishConfig": {
     "access": "public",

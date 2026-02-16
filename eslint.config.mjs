@@ -1,4 +1,3 @@
-import * as effectEslint from "@effect/eslint-plugin";
 import { fixupPluginRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
@@ -27,7 +26,6 @@ export default [
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
   ),
-  ...effectEslint.configs.dprint,
   {
     plugins: {
       import: fixupPluginRules(_import),
@@ -65,8 +63,7 @@ export default [
       "no-restricted-syntax": [
         "error",
         {
-          selector:
-            "CallExpression[callee.property.name='push'] > SpreadElement.arguments",
+          selector: "CallExpression[callee.property.name='push'] > SpreadElement.arguments",
           message: "Do not use spread arguments in Array.push",
         },
       ],
@@ -113,21 +110,6 @@ export default [
       "@typescript-eslint/no-array-constructor": "off",
       "@typescript-eslint/no-use-before-define": "off",
       "@typescript-eslint/no-namespace": "off",
-
-      "@effect/dprint": [
-        "error",
-        {
-          config: {
-            indentWidth: 2,
-            lineWidth: 120,
-            semiColons: "prefer",
-            quoteStyle: "alwaysDouble",
-            trailingCommas: "onlyMultiLine",
-            operatorPosition: "maintain",
-            "arrowFunction.useParentheses": "force",
-          },
-        },
-      ],
     },
   },
 ];

@@ -42,3 +42,16 @@ export class SpotifySearchResponse extends Schema.Class<SpotifySearchResponse>(
   artists: ArtistResponse,
   albums: AlbumResponse,
 }) {}
+
+/**
+ * Query parameters for the Spotify search request.
+ *
+ * See: https://developer.spotify.com/documentation/web-api/reference/search
+ */
+export class SpotifySearchRequestParams extends Schema.Class<SpotifySearchRequestParams>(
+  "SpotifySearchRequestParams",
+)({
+  q: Schema.String, // Search query
+  type: Schema.Array(Schema.Literal("album", "artist", "track")),
+  market: Schema.Literal("US"),
+}) {}
