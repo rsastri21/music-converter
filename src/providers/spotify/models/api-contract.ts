@@ -3,7 +3,7 @@ import { Album, Artist, SpotifyHref, Track } from "./models.js";
 
 export class SpotifySearchError extends Data.TaggedError("SpotifySearchError")<{
   message: string;
-  cause: Error;
+  cause?: Error;
 }> { }
 
 export class SpotifyGetError extends Data.TaggedError("SpotifyGetError")<{

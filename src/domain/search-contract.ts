@@ -2,6 +2,7 @@ import { HttpApiEndpoint, HttpApiGroup } from "@effect/platform";
 import { Schema } from "effect";
 
 export const AVAILABLE_PROVIDERS = Schema.Literal("spotify");
+export const SUPPORTED_SEARCH_TYPES = Schema.Literal("artist", "album", "track");
 
 export class TrackDao extends Schema.Class<TrackDao>("TrackDao")({
   id: Schema.String,
@@ -10,7 +11,7 @@ export class TrackDao extends Schema.Class<TrackDao>("TrackDao")({
   album: Schema.String,
   thumbnail: Schema.String,
   art: Schema.String,
-  shareUrls: Schema.Array(Schema.String),
+  shareUrl: Schema.String,
   type: Schema.Literal("track"),
 }) { }
 
@@ -19,7 +20,7 @@ export class ArtistDao extends Schema.Class<ArtistDao>("ArtistDao")({
   name: Schema.String,
   thumbnail: Schema.String,
   art: Schema.String,
-  shareUrls: Schema.Array(Schema.String),
+  shareUrl: Schema.String,
   type: Schema.Literal("artist"),
 }) { }
 
@@ -29,7 +30,7 @@ export class AlbumDao extends Schema.Class<AlbumDao>("AlbumDao")({
   artist: Schema.String,
   thumbnail: Schema.String,
   art: Schema.String,
-  shareUrls: Schema.Array(Schema.String),
+  shareUrl: Schema.String,
   type: Schema.Literal("album"),
 }) { }
 
@@ -54,7 +55,7 @@ export const TypeaheadResponse = Schema.Struct({
 export class ResolveRequest extends Schema.Class<ResolveRequest>("ResolveRequest")({
   mode: Schema.Literal("resolve"),
   provider: AVAILABLE_PROVIDERS, // Default to the user's requested provider for art
-  type: Schema.Literal("album", "artist", "track"),
+  type: SUPPORTED_SEARCH_TYPES,
   query: Schema.String,
 }) { }
 
