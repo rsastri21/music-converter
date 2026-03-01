@@ -5,13 +5,13 @@ import { MusicServiceProvider } from "src/domain/provider-shape.js";
 import { TypeaheadResponse, type SearchRequest } from "src/domain/search-contract.js";
 import { MusicServiceProviderMap } from "src/providers/provider-map.js";
 
-const handleTypeaheadSearch = Effect.fnUntraced(function* (query: string) {
+const handleTypeaheadSearch = Effect.fnUntraced(function*(query: string) {
   const provider = yield* MusicServiceProvider;
   const result = yield* provider.search(query);
   return TypeaheadResponse.make({
     mode: "typeahead",
-    items: result,
     from: provider.providerId,
+    ...result,
   });
 });
 

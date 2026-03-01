@@ -11,17 +11,21 @@ export class ExternalUrl extends Schema.Class<ExternalUrl>("ExternalUrl")({
 }) { }
 
 export class Image extends Schema.Class<Image>("Image")({
-  url: Schema.URL,
+  url: Schema.String,
   height: Schema.Number,
   width: Schema.Number,
 }) { }
 
-export class Artist extends Schema.Class<Artist>("Artist")({
+export class SimplifiedArtist extends Schema.Class<SimplifiedArtist>("SimplifiedArtist")({
   id: SpotifyId,
   href: SpotifyHref,
   name: Schema.String,
   externalUrls: Schema.propertySignature(ExternalUrl).pipe(Schema.fromKey("external_urls")),
   type: Schema.Literal("artist"),
+}) { }
+
+export class Artist extends SimplifiedArtist.extend<Artist>("Artist")({
+  images: Schema.Array(Image),
 }) { }
 
 export class Album extends Schema.Class<Album>("Album")({
@@ -33,14 +37,14 @@ export class Album extends Schema.Class<Album>("Album")({
   id: SpotifyId,
   images: Schema.Array(Image),
   name: Schema.String,
-  artists: Schema.Array(Artist),
+  artists: Schema.Array(SimplifiedArtist),
   externalUrls: Schema.propertySignature(ExternalUrl).pipe(Schema.fromKey("external_urls")),
   type: Schema.Literal("album"),
 }) { }
 
 export class Track extends Schema.Class<Track>("Track")({
   album: Album,
-  artists: Schema.Array(Artist),
+  artists: Schema.Array(SimplifiedArtist),
   durationMs: Schema.propertySignature(Schema.Number).pipe(Schema.fromKey("duration_ms")),
   explicit: Schema.Boolean,
   href: SpotifyHref,

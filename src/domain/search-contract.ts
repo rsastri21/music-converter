@@ -1,9 +1,36 @@
 import { HttpApiEndpoint, HttpApiGroup } from "@effect/platform";
 import { Schema } from "effect";
-import { SpotifySearchResponse } from "src/providers/spotify/models/api-contract.js";
 import { Album, Artist, Track } from "src/providers/spotify/models/models.js";
 
 export const AVAILABLE_PROVIDERS = Schema.Literal("spotify");
+
+export class TrackDao extends Schema.Class<TrackDao>("TrackDao")({
+  id: Schema.String,
+  name: Schema.String,
+  artists: Schema.Array(Schema.String),
+  thumbnail: Schema.String,
+  art: Schema.String,
+  shareUrls: Schema.Array(Schema.String),
+  type: Schema.Literal("track"),
+}) { }
+
+export class ArtistDao extends Schema.Class<ArtistDao>("ArtistDao")({
+  id: Schema.String,
+  name: Schema.String,
+  thumbnail: Schema.String,
+  art: Schema.String,
+  shareUrls: Schema.Array(Schema.String),
+  type: Schema.Literal("artist"),
+}) { }
+
+export class AlbumDao extends Schema.Class<AlbumDao>("AlbumDao")({
+  id: Schema.String,
+  name: Schema.String,
+  thumbnail: Schema.String,
+  art: Schema.String,
+  shareUrls: Schema.Array(Schema.String),
+  type: Schema.Literal("album"),
+}) { }
 
 // Typeahead models
 
@@ -15,7 +42,9 @@ export class TypeaheadRequest extends Schema.Class<TypeaheadRequest>("TypeaheadR
 
 export const TypeaheadResponse = Schema.Struct({
   mode: Schema.Literal("typeahead"),
-  items: Schema.Union(SpotifySearchResponse),
+  tracks: Schema.Array(TrackDao),
+  artists: Schema.Array(ArtistDao),
+  albums: Schema.Array(AlbumDao),
   from: AVAILABLE_PROVIDERS,
 });
 

@@ -4,6 +4,7 @@ import { SpotifyAuthService } from "./spotify-auth.js";
 import { HttpClient, HttpClientRequest, HttpClientResponse, UrlParams } from "@effect/platform";
 import { SpotifySearchError, SpotifySearchResponse } from "./models/api-contract.js";
 import { SPOTIFY_SEARCH_URL } from "./models/models.js";
+import { albumToDao, artistToDao, trackToDao } from "./mapper.js";
 
 export const spotifySearchLayer = Layer.effect(
   MusicServiceProvider,
@@ -26,7 +27,12 @@ export const spotifySearchLayer = Layer.effect(
             HttpClientRequest.bearerToken(token),
           );
           const res = yield* client.execute(req);
-          return yield* HttpClientResponse.schemaBodyJson(SpotifySearchResponse)(res);
+          const searchResponse = yield* HttpClientResponse.schemaBodyJson(SpotifySearchResponse)(res);
+          return {
+            tracks: searchResponse.tracks.items.map(trackToDao),
+            artists: searchResponse.artists.items.map(artistToDao),
+            albums: searchResponse.albums.items.map(albumToDao),
+          };
         },
         (effect) =>
           pipe(
