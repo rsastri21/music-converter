@@ -1,6 +1,5 @@
 import { HttpApiEndpoint, HttpApiGroup } from "@effect/platform";
 import { Schema } from "effect";
-import { Album, Artist, Track } from "src/providers/spotify/models/models.js";
 
 export const AVAILABLE_PROVIDERS = Schema.Literal("spotify");
 
@@ -8,6 +7,7 @@ export class TrackDao extends Schema.Class<TrackDao>("TrackDao")({
   id: Schema.String,
   name: Schema.String,
   artists: Schema.Array(Schema.String),
+  album: Schema.String,
   thumbnail: Schema.String,
   art: Schema.String,
   shareUrls: Schema.Array(Schema.String),
@@ -26,6 +26,7 @@ export class ArtistDao extends Schema.Class<ArtistDao>("ArtistDao")({
 export class AlbumDao extends Schema.Class<AlbumDao>("AlbumDao")({
   id: Schema.String,
   name: Schema.String,
+  artist: Schema.String,
   thumbnail: Schema.String,
   art: Schema.String,
   shareUrls: Schema.Array(Schema.String),
@@ -52,18 +53,15 @@ export const TypeaheadResponse = Schema.Struct({
 
 export class ResolveRequest extends Schema.Class<ResolveRequest>("ResolveRequest")({
   mode: Schema.Literal("resolve"),
+  provider: AVAILABLE_PROVIDERS, // Default to the user's requested provider for art
   type: Schema.Literal("album", "artist", "track"),
   query: Schema.String,
 }) { }
 
-class SpotifyResolveResponse extends Schema.Class<SpotifyResolveResponse>("SpotifyResolveResponse")({
-  provider: Schema.Literal("spotify"),
-  result: Schema.Union(Track, Artist, Album),
-}) { }
-
 export const ResolveResponse = Schema.Struct({
   mode: Schema.Literal("resolve"),
-  items: Schema.Array(Schema.Union(SpotifyResolveResponse)),
+  from: AVAILABLE_PROVIDERS,
+  item: Schema.Union(TrackDao, ArtistDao, AlbumDao),
 });
 
 // Joint model

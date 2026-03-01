@@ -6,6 +6,11 @@ export class SpotifySearchError extends Data.TaggedError("SpotifySearchError")<{
   cause: Error;
 }> { }
 
+export class SpotifyGetError extends Data.TaggedError("SpotifyGetError")<{
+  message: string;
+  cause?: Error;
+}> { }
+
 export class BaseResponse extends Schema.Class<BaseResponse>("BaseResponse")({
   href: SpotifyHref,
   limit: Schema.Number,

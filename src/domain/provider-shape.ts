@@ -9,9 +9,13 @@ const ProviderSearchResponse = Schema.Struct({
   albums: Schema.Array(AlbumDao),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ProviderGetResponse = Schema.Union(TrackDao, ArtistDao, AlbumDao);
+
 export interface MusicServiceProviderShape {
   providerId: typeof AVAILABLE_PROVIDERS.Type;
   search: (query: string) => Effect.Effect<typeof ProviderSearchResponse.Type, never>;
+  get: (type: string, id: string) => Effect.Effect<typeof ProviderGetResponse.Type, never>;
 }
 
 export class MusicServiceProvider extends Context.Tag("music-converter/domain/provider-shape/MusicServiceProvider")<

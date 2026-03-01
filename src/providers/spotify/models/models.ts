@@ -1,6 +1,7 @@
 import { Schema } from "effect";
 
 export const SPOTIFY_SEARCH_URL = "https://api.spotify.com/v1/search";
+export const SPOTIFY_BASE_URL = "https://api.spotify.com/v1";
 export const SPOTIFY_AUTH_URL = "https://accounts.spotify.com/api/token";
 
 export const SpotifyId = Schema.String.pipe(Schema.brand("SpotifyId"));
