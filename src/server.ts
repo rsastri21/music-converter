@@ -8,6 +8,7 @@ import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
 import { createServer } from "node:http";
 import { MusicServiceProviderMap } from "./providers/provider-map.js";
 import { ProviderLive } from "./api/provider-live.js";
+import { AppleMusicAuthService } from "./providers/apple-music/apple-music-auth.js";
 
 const ApiLive = HttpApiBuilder.api(DomainApi).pipe(Layer.provide([SearchLive, ProviderLive]));
 
@@ -23,9 +24,11 @@ const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
   Layer.provide(CorsLive),
   Layer.provide(ApiLive),
   Layer.merge(Layer.effectDiscard(SpotifyAuthService.use((service) => service.setupCredentialsRefresh))),
+  Layer.merge(Layer.effectDiscard(AppleMusicAuthService.use((service) => service.setupCredentialsRefresh))),
   Layer.merge(Layer.effectDiscard(RedisService.use((redis) => redis.setupConnectionListeners))),
   Layer.provide(MusicServiceProviderMap.Default),
   Layer.provide(SpotifyAuthService.Default),
+  Layer.provide(AppleMusicAuthService.Default),
   Layer.provide(RedisService.Default),
   Layer.provide(FetchHttpClient.layer),
   Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
