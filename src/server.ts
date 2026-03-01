@@ -7,8 +7,9 @@ import { RedisService } from "./services/redis.js";
 import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
 import { createServer } from "node:http";
 import { MusicServiceProviderMap } from "./providers/provider-map.js";
+import { ProviderLive } from "./api/provider-live.js";
 
-const ApiLive = HttpApiBuilder.api(DomainApi).pipe(Layer.provide([SearchLive]));
+const ApiLive = HttpApiBuilder.api(DomainApi).pipe(Layer.provide([SearchLive, ProviderLive]));
 
 const CorsLive = HttpApiBuilder.middlewareCors({
   allowedOrigins: ["*"],
