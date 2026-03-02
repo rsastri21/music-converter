@@ -37,9 +37,9 @@ export class SongResponse extends BaseResponse.extend<SongResponse>("SongRespons
  */
 export class AppleMusicSearchResponse extends Schema.Class<AppleMusicSearchResponse>("AppleMusicSearchResponse")({
   results: Schema.Struct({
-    artists: ArtistResponse,
-    albums: AlbumResponse,
-    songs: SongResponse,
+    artists: Schema.optional(ArtistResponse),
+    albums: Schema.optional(AlbumResponse),
+    songs: Schema.optional(SongResponse),
   }),
 }) { }
 

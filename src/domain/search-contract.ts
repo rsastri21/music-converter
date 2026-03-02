@@ -1,7 +1,7 @@
-import { HttpApiEndpoint, HttpApiGroup } from "@effect/platform";
+import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform";
 import { Schema } from "effect";
 
-export const AVAILABLE_PROVIDERS = Schema.Literal("spotify");
+export const AVAILABLE_PROVIDERS = Schema.Literal("spotify", "appleMusic");
 export const SUPPORTED_SEARCH_TYPES = Schema.Literal("artist", "album", "track");
 
 export class TrackDao extends Schema.Class<TrackDao>("TrackDao")({
@@ -70,6 +70,16 @@ export const ResolveResponse = Schema.Struct({
 export const SearchRequest = Schema.Union(ResolveRequest, TypeaheadRequest);
 export const SearchResponse = Schema.Union(ResolveResponse, TypeaheadResponse);
 
+// Errors
+
+export class SearchError extends Schema.TaggedError<SearchError>()(
+  "SearchError",
+  {
+    message: Schema.String,
+  },
+  HttpApiSchema.annotations({ status: 400 }),
+) { }
+
 export class SearchGroup extends HttpApiGroup.make("search").add(
-  HttpApiEndpoint.get("search", "/search").addSuccess(SearchResponse).setUrlParams(SearchRequest),
+  HttpApiEndpoint.get("search", "/search").addSuccess(SearchResponse).addError(SearchError).setUrlParams(SearchRequest),
 ) { }

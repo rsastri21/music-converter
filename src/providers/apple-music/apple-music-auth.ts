@@ -53,7 +53,6 @@ export class AppleMusicAuthService extends Effect.Service<AppleMusicAuthService>
           catch: (error) => new AppleMusicAuthError({ message: "Could not sign JWT", cause: error }),
         });
 
-        yield* Effect.logInfo(token);
         return token;
       });
 

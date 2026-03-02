@@ -1,5 +1,8 @@
 import { Schema } from "effect";
 
+export const APPLE_MUSIC_SEARCH_URL = "https://api.music.apple.com/v1/catalog/us/search";
+export const APPLE_MUSIC_BASE_URL = "https://api.music.apple.com/v1/catalog/us";
+
 export const AppleMusicId = Schema.String.pipe(Schema.brand("AppleMusicId"));
 export const AppleMusicHref = Schema.String.pipe(Schema.brand("AppleMusicHref"));
 

@@ -1,5 +1,5 @@
 import { HttpApiBuilder } from "@effect/platform";
-import { Effect, Match, pipe } from "effect";
+import { Effect, Match } from "effect";
 import { DomainApi } from "src/domain/domain-api.js";
 import { MusicServiceProvider } from "src/domain/provider-shape.js";
 import {
@@ -8,9 +8,9 @@ import {
   TypeaheadResponse,
   type SearchRequest,
   ResolveResponse,
+  SearchError,
 } from "src/domain/search-contract.js";
 import { MusicServiceProviderMap } from "src/providers/provider-map.js";
-import { SpotifySearchError } from "src/providers/spotify/models/api-contract.js";
 
 const handleTypeaheadSearch = Effect.fnUntraced(function*(query: string) {
   const provider = yield* MusicServiceProvider;
@@ -33,34 +33,31 @@ const makeResolveResponse = (item: ItemType, providerId: typeof AVAILABLE_PROVID
     item,
   });
 
-const handleResolveSearch = Effect.fnUntraced(
-  function*(query: string, type: typeof SUPPORTED_SEARCH_TYPES.Type) {
-    const provider = yield* MusicServiceProvider;
-    const result = yield* provider.search(query);
+const handleResolveSearch = Effect.fnUntraced(function*(query: string, type: typeof SUPPORTED_SEARCH_TYPES.Type) {
+  const provider = yield* MusicServiceProvider;
+  const result = yield* provider.search(query);
 
-    switch (type) {
-      case "artist": {
-        yield* Effect.fail(new SpotifySearchError({ message: "No results." })).pipe(
-          Effect.when(() => result.artists.length == 0),
-        );
-        return makeResolveResponse(result.artists[0], provider.providerId);
-      }
-      case "album": {
-        yield* Effect.fail(new SpotifySearchError({ message: "No results." })).pipe(
-          Effect.when(() => result.albums.length == 0),
-        );
-        return makeResolveResponse(result.albums[0], provider.providerId);
-      }
-      case "track": {
-        yield* Effect.fail(new SpotifySearchError({ message: "No results." })).pipe(
-          Effect.when(() => result.tracks.length == 0),
-        );
-        return makeResolveResponse(result.tracks[0], provider.providerId);
-      }
+  switch (type) {
+    case "artist": {
+      yield* Effect.fail(new SearchError({ message: "No results." })).pipe(
+        Effect.when(() => result.artists.length == 0),
+      );
+      return makeResolveResponse(result.artists[0], provider.providerId);
     }
-  },
-  (effect) => pipe(effect, Effect.catchAll(Effect.die)),
-);
+    case "album": {
+      yield* Effect.fail(new SearchError({ message: "No results." })).pipe(
+        Effect.when(() => result.albums.length == 0),
+      );
+      return makeResolveResponse(result.albums[0], provider.providerId);
+    }
+    case "track": {
+      yield* Effect.fail(new SearchError({ message: "No results." })).pipe(
+        Effect.when(() => result.tracks.length == 0),
+      );
+      return makeResolveResponse(result.tracks[0], provider.providerId);
+    }
+  }
+});
 
 export const SearchLive = HttpApiBuilder.group(DomainApi, "search", (handlers) => {
   const searchMatcher = (input: typeof SearchRequest.Type) =>
