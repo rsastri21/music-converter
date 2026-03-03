@@ -11,11 +11,13 @@ const buildSizedUrl = (urlTemplate: string, height: number, width: number): stri
   return urlTemplate.replace(/{w}/g, widthStr).replace(/{h}/g, heightStr);
 };
 
+const extractArtists = (artistName: string) => artistName.split(/\s*(?:,|&)\s*/g).filter((part) => part.length > 0);
+
 export const songToDao = (song: typeof Song.Type): typeof TrackDao.Type =>
   TrackDao.make({
     id: song.id,
     name: song.attributes.name,
-    artists: [song.attributes.artistName],
+    artists: extractArtists(song.attributes.artistName),
     album: song.attributes.albumName,
     thumbnail: buildSizedUrl(song.attributes.artwork.url, THUMBNAIL_SIZE, THUMBNAIL_SIZE),
     art: buildSizedUrl(song.attributes.artwork.url, song.attributes.artwork.height, song.attributes.artwork.width),
