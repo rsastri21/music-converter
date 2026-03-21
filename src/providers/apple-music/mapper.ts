@@ -21,7 +21,9 @@ export const songToDao = (song: typeof Song.Type): typeof TrackDao.Type =>
     album: song.attributes.albumName,
     thumbnail: buildSizedUrl(song.attributes.artwork.url, THUMBNAIL_SIZE, THUMBNAIL_SIZE),
     art: buildSizedUrl(song.attributes.artwork.url, song.attributes.artwork.height, song.attributes.artwork.width),
-    shareUrl: song.attributes.url,
+    shareUrl: {
+      ["appleMusic"]: song.attributes.url,
+    },
     type: "track",
   });
 
@@ -35,7 +37,9 @@ export const artistToDao = (artist: typeof Artist.Type): typeof ArtistDao.Type =
     art: artist.attributes.artwork
       ? buildSizedUrl(artist.attributes.artwork.url, artist.attributes.artwork.height, artist.attributes.artwork.width)
       : "",
-    shareUrl: artist.attributes.url,
+    shareUrl: {
+      ["appleMusic"]: artist.attributes.url,
+    },
     type: "artist",
   });
 
@@ -46,6 +50,8 @@ export const albumToDao = (album: typeof Album.Type): typeof AlbumDao.Type =>
     artist: album.attributes.artistName,
     thumbnail: buildSizedUrl(album.attributes.artwork.url, THUMBNAIL_SIZE, THUMBNAIL_SIZE),
     art: buildSizedUrl(album.attributes.artwork.url, album.attributes.artwork.height, album.attributes.artwork.width),
-    shareUrl: album.attributes.url,
+    shareUrl: {
+      ["appleMusic"]: album.attributes.url,
+    },
     type: "album",
   });

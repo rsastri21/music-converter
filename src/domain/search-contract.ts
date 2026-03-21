@@ -4,6 +4,15 @@ import { Schema } from "effect";
 export const AVAILABLE_PROVIDERS = Schema.Literal("spotify", "appleMusic");
 export const SUPPORTED_SEARCH_TYPES = Schema.Literal("artist", "album", "track");
 
+export const ShareUrl = Schema.Struct({
+  spotify: Schema.optional(Schema.String),
+  appleMusic: Schema.optional(Schema.String),
+});
+
+export const WithShareUrl = Schema.Struct({
+  shareUrl: ShareUrl,
+});
+
 export class TrackDao extends Schema.Class<TrackDao>("TrackDao")({
   id: Schema.String,
   name: Schema.String,
@@ -11,18 +20,18 @@ export class TrackDao extends Schema.Class<TrackDao>("TrackDao")({
   album: Schema.String,
   thumbnail: Schema.String,
   art: Schema.String,
-  shareUrl: Schema.String,
+  shareUrl: ShareUrl,
   type: Schema.Literal("track"),
-}) { }
+}) {}
 
 export class ArtistDao extends Schema.Class<ArtistDao>("ArtistDao")({
   id: Schema.String,
   name: Schema.String,
   thumbnail: Schema.String,
   art: Schema.String,
-  shareUrl: Schema.String,
+  shareUrl: ShareUrl,
   type: Schema.Literal("artist"),
-}) { }
+}) {}
 
 export class AlbumDao extends Schema.Class<AlbumDao>("AlbumDao")({
   id: Schema.String,
@@ -30,9 +39,9 @@ export class AlbumDao extends Schema.Class<AlbumDao>("AlbumDao")({
   artist: Schema.String,
   thumbnail: Schema.String,
   art: Schema.String,
-  shareUrl: Schema.String,
+  shareUrl: ShareUrl,
   type: Schema.Literal("album"),
-}) { }
+}) {}
 
 // Typeahead models
 
@@ -40,7 +49,7 @@ export class TypeaheadRequest extends Schema.Class<TypeaheadRequest>("TypeaheadR
   mode: Schema.Literal("typeahead"),
   provider: AVAILABLE_PROVIDERS,
   query: Schema.String,
-}) { }
+}) {}
 
 export const TypeaheadResponse = Schema.Struct({
   mode: Schema.Literal("typeahead"),
@@ -57,7 +66,7 @@ export class ResolveRequest extends Schema.Class<ResolveRequest>("ResolveRequest
   provider: AVAILABLE_PROVIDERS, // Default to the user's requested provider for art
   type: SUPPORTED_SEARCH_TYPES,
   query: Schema.String,
-}) { }
+}) {}
 
 export const ResolveResponse = Schema.Struct({
   mode: Schema.Literal("resolve"),
@@ -78,8 +87,8 @@ export class SearchError extends Schema.TaggedError<SearchError>()(
     message: Schema.String,
   },
   HttpApiSchema.annotations({ status: 400 }),
-) { }
+) {}
 
 export class SearchGroup extends HttpApiGroup.make("search").add(
   HttpApiEndpoint.get("search", "/search").addSuccess(SearchResponse).addError(SearchError).setUrlParams(SearchRequest),
-) { }
+) {}

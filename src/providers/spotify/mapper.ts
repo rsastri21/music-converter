@@ -14,7 +14,9 @@ export const trackToDao = (track: typeof Track.Type): typeof TrackDao.Type => {
     album: track.album.name,
     thumbnail: sortedImages[0].url, // lowest resolution
     art: sortedImages[sortedImages.length - 1].url, // highest resolution
-    shareUrl: track.externalUrls.spotify,
+    shareUrl: {
+      ["spotify"]: track.externalUrls.spotify,
+    },
     type: track.type,
   });
 };
@@ -26,7 +28,9 @@ export const artistToDao = (artist: Artist): ArtistDao => {
     name: artist.name,
     thumbnail: sortedImages[0]?.url ?? "",
     art: sortedImages[sortedImages.length - 1]?.url ?? "",
-    shareUrl: artist.externalUrls.spotify,
+    shareUrl: {
+      ["spotify"]: artist.externalUrls.spotify,
+    },
     type: artist.type,
   });
 };
@@ -39,7 +43,9 @@ export const albumToDao = (album: Album): AlbumDao => {
     artist: album.artists.map((artist) => artist.name).join(", "),
     thumbnail: sortedImages[0].url,
     art: sortedImages[sortedImages.length - 1].url,
-    shareUrl: album.externalUrls.spotify,
+    shareUrl: {
+      ["spotify"]: album.externalUrls.spotify,
+    },
     type: album.type,
   });
 };
